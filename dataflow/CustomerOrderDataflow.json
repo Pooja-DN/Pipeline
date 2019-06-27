@@ -28,7 +28,7 @@
 						"type": "DatasetReference"
 					},
 					"name": "CustomerOrderOutputSink",
-					"script": "SortByName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tCustomerID,\n\t\tContactNum,\n\t\tOrderID,\n\t\tCustomerName = OrdersInput@CustomerName,\n\t\tCountry = OrdersInput@Country,\n\t\tOrderDate = OrdersInput@OrderDate,\n\t\tProduct\n\t)) ~> CustomerOrderOutputSink"
+					"script": "FilterByCountry sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tCustomerID,\n\t\tContactNum,\n\t\tOrderID,\n\t\tCustomerName = OrdersInput@CustomerName,\n\t\tCountry = OrdersInput@Country,\n\t\tOrderDate = OrdersInput@OrderDate,\n\t\tProduct\n\t)) ~> CustomerOrderOutputSink"
 				}
 			],
 			"transformations": [
@@ -39,6 +39,10 @@
 				{
 					"name": "SortByName",
 					"script": "CustomerOrderLeftJoin sort(asc(CustomerInput@CustomerName, true)) ~> SortByName"
+				},
+				{
+					"name": "FilterByCountry",
+					"script": "SortByName filter(CustomerInput@Country != 'America') ~> FilterByCountry"
 				}
 			]
 		}
