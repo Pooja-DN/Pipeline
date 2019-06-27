@@ -461,7 +461,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"container": "rightjoinoutput"
+						"container": "innerjoinoutput"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
