@@ -1,0 +1,42 @@
+{
+	"name": "CustomerOrdersPipeline",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "OrderDetails",
+						"type": "DatasetReference"
+					},
+					"name": "OrderInputData",
+					"script": "source(output(\n\t\tOrderID as short,\n\t\tCustomerName as string,\n\t\tCountry as string,\n\t\tOrderDate as string,\n\t\tProduct as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> OrderInputData"
+				},
+				{
+					"dataset": {
+						"referenceName": "CustomerDetails",
+						"type": "DatasetReference"
+					},
+					"name": "CustomerInputData",
+					"script": "source(output(\n\t\tCustomerID as string,\n\t\tCustomerName as string,\n\t\tContactNum as string,\n\t\tCountry as string,\n\t\tOrderDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> CustomerInputData"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CustomerOrderOutput",
+						"type": "DatasetReference"
+					},
+					"name": "CustomerOrderOutput",
+					"script": "CustomerOrdersOuterJoin sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tOrderID,\n\t\tProduct,\n\t\tCustomerID,\n\t\tCustomerName = CustomerInputData@CustomerName,\n\t\tContactNum,\n\t\tCountry = CustomerInputData@Country,\n\t\tOrderDate = CustomerInputData@OrderDate\n\t)) ~> CustomerOrderOutput"
+				}
+			],
+			"transformations": [
+				{
+					"name": "CustomerOrdersOuterJoin",
+					"script": "OrderInputData, CustomerInputData join(OrderInputData@CustomerName == CustomerInputData@CustomerName,\n\tjoinType:'outer',\n\tbroadcast: 'none')~> CustomerOrdersOuterJoin"
+				}
+			]
+		}
+	}
+}
