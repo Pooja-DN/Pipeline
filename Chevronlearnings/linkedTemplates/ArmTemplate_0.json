@@ -511,16 +511,16 @@
 					],
 					"transformations": [
 						{
-							"name": "CustomerOrderRightJoin",
-							"script": "CustomerInput, OrdersInput join(CustomerInput@Country == OrdersInput@Country\n\t&& CustomerInput@CustomerName == OrdersInput@CustomerName\n\t&& CustomerInput@OrderDate == OrdersInput@OrderDate,\n\tjoinType:'right',\n\tbroadcast: 'none')~> CustomerOrderRightJoin"
+							"name": "CustomerOrderInnerJoin",
+							"script": "CustomerInput, OrdersInput join(CustomerInput@Country == OrdersInput@Country\n\t&& CustomerInput@CustomerName == OrdersInput@CustomerName\n\t&& CustomerInput@OrderDate == OrdersInput@OrderDate,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> CustomerOrderInnerJoin"
 						},
 						{
-							"name": "SortByName",
-							"script": "CustomerOrderRightJoin sort(asc(CustomerInput@CustomerName, true)) ~> SortByName"
+							"name": "SortByCountry",
+							"script": "CustomerOrderInnerJoin sort(desc(CustomerInput@Country, true)) ~> SortByCountry"
 						},
 						{
 							"name": "FilterByCountry",
-							"script": "SortByName filter(CustomerInput@Country != 'America') ~> FilterByCountry"
+							"script": "SortByCountry filter(CustomerInput@Country != 'America') ~> FilterByCountry"
 						}
 					]
 				}
