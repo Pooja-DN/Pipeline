@@ -29,7 +29,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"name": "[concat(parameters('factoryName'), '/CustomerOrderPipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -273,7 +273,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "CustomerOrderPipeline",
+								"referenceName": "CustomerOrderDataflow",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -293,7 +293,7 @@
 				"[concat(variables('factoryId'), '/datasets/CustomerStagging')]",
 				"[concat(variables('factoryId'), '/datasets/OrderDetails')]",
 				"[concat(variables('factoryId'), '/datasets/OrderStagging')]",
-				"[concat(variables('factoryId'), '/dataflows/CustomerOrderPipeline')]"
+				"[concat(variables('factoryId'), '/dataflows/CustomerOrderDataflow')]"
 			]
 		},
 		{
@@ -659,7 +659,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CustomerOrderPipeline')]",
+			"name": "[concat(parameters('factoryName'), '/CustomerOrderDataflow')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
