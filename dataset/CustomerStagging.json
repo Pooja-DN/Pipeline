@@ -1,0 +1,42 @@
+{
+	"name": "CustomerStagging",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "stagging"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "256",
+				"type": "String"
+			},
+			{
+				"name": "Sreeja",
+				"type": "String"
+			},
+			{
+				"name": "9876542561",
+				"type": "String"
+			},
+			{
+				"name": "India",
+				"type": "String"
+			},
+			{
+				"name": "17-02-19",
+				"type": "String"
+			}
+		]
+	}
+}
