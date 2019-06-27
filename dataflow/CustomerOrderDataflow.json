@@ -28,13 +28,17 @@
 						"type": "DatasetReference"
 					},
 					"name": "CustomerOrderOutputSink",
-					"script": "CustomerOrderFullOuterJoin sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tCustomerID,\n\t\tContactNum,\n\t\tOrderID,\n\t\tCustomerName = OrdersInput@CustomerName,\n\t\tCountry = OrdersInput@Country,\n\t\tOrderDate = OrdersInput@OrderDate,\n\t\tProduct\n\t)) ~> CustomerOrderOutputSink"
+					"script": "SortByName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tCustomerID,\n\t\tContactNum,\n\t\tOrderID,\n\t\tCustomerName = OrdersInput@CustomerName,\n\t\tCountry = OrdersInput@Country,\n\t\tOrderDate = OrdersInput@OrderDate,\n\t\tProduct\n\t)) ~> CustomerOrderOutputSink"
 				}
 			],
 			"transformations": [
 				{
-					"name": "CustomerOrderFullOuterJoin",
-					"script": "CustomerInput, OrdersInput join(CustomerInput@CustomerName == OrdersInput@CustomerName,\n\tjoinType:'outer',\n\tbroadcast: 'none')~> CustomerOrderFullOuterJoin"
+					"name": "CustomerOrderLeftJoin",
+					"script": "CustomerInput, OrdersInput join(CustomerInput@CustomerName == OrdersInput@CustomerName,\n\tjoinType:'left',\n\tbroadcast: 'none')~> CustomerOrderLeftJoin"
+				},
+				{
+					"name": "SortByName",
+					"script": "CustomerOrderLeftJoin sort(asc(CustomerInput@CustomerName, true)) ~> SortByName"
 				}
 			]
 		}
