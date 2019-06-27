@@ -232,7 +232,7 @@
 				},
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "CustomerOrderPipeline",
+						"referenceName": "CustomerOrderDataflow",
 						"type": "DataFlowReference"
 					}
 				}

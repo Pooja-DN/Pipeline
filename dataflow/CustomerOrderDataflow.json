@@ -1,5 +1,5 @@
 {
-	"name": "CustomerOrderPipeline",
+	"name": "CustomerOrderDataflow",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
