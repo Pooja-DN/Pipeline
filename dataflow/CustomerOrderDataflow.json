@@ -34,7 +34,7 @@
 			"transformations": [
 				{
 					"name": "CustomerOrderInnerJoin",
-					"script": "CustomerInput, OrdersInput join(ERROR_FUNCTION(''),\n\tjoinType:'cross',\n\tbroadcast: 'none')~> CustomerOrderInnerJoin"
+					"script": "CustomerInput, OrdersInput join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),\n\tjoinType:'inner',\n\tbroadcast: 'none')~> CustomerOrderInnerJoin"
 				},
 				{
 					"name": "SortByCountry",
