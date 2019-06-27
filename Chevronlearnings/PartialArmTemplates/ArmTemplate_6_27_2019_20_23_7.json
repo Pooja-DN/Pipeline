@@ -1,0 +1,68 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "Chevronlearnings"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/CustomerOrderDataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CustomerInput",
+								"type": "DatasetReference"
+							},
+							"name": "CustomerInput",
+							"script": "source(output(\n\t\tCustomerID as string,\n\t\tCustomerName as string,\n\t\tContactNum as string,\n\t\tCountry as string,\n\t\tOrderDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> CustomerInput"
+						},
+						{
+							"dataset": {
+								"referenceName": "OrderInput",
+								"type": "DatasetReference"
+							},
+							"name": "OrdersInput",
+							"script": "source(output(\n\t\tOrderID as string,\n\t\tCustomerName as string,\n\t\tCountry as string,\n\t\tOrderDate as string,\n\t\tProduct as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> OrdersInput"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CustomerOrderOutput",
+								"type": "DatasetReference"
+							},
+							"name": "CustomerOrderOutputSink",
+							"script": "FilterByCountry sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tCustomerID,\n\t\tContactNum,\n\t\tOrderID,\n\t\tCustomerName = OrdersInput@CustomerName,\n\t\tCountry = OrdersInput@Country,\n\t\tOrderDate = OrdersInput@OrderDate,\n\t\tProduct\n\t)) ~> CustomerOrderOutputSink"
+						}
+					],
+					"transformations": [
+						{
+							"name": "CustomerOrderRightJoin",
+							"script": "CustomerInput, OrdersInput join(CustomerInput@Country == OrdersInput@Country\n\t&& CustomerInput@CustomerName == OrdersInput@CustomerName\n\t&& CustomerInput@OrderDate == OrdersInput@OrderDate,\n\tjoinType:'right',\n\tbroadcast: 'none')~> CustomerOrderRightJoin"
+						},
+						{
+							"name": "SortByName",
+							"script": "CustomerOrderRightJoin sort(asc(CustomerInput@CustomerName, true)) ~> SortByName"
+						},
+						{
+							"name": "FilterByCountry",
+							"script": "SortByName filter(CustomerInput@Country != 'America') ~> FilterByCountry"
+						}
+					]
+				}
+			}
+		}
+	]
+}
