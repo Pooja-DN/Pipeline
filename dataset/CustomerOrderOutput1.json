@@ -9,7 +9,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"container": "innerjoinoutput"
+				"container": "githubtemplateoutput"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
