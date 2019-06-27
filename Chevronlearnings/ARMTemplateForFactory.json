@@ -780,7 +780,7 @@
 					"transformations": [
 						{
 							"name": "CustomerOrderInnerJoin",
-							"script": "CustomerInput, OrdersInput join(CustomerInput@Country == OrdersInput@Country\n\t&& CustomerInput@CustomerName == OrdersInput@CustomerName\n\t&& CustomerInput@OrderDate == OrdersInput@OrderDate,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> CustomerOrderInnerJoin"
+							"script": "CustomerInput, OrdersInput join(CustomerInput@Country == OrdersInput@Country\n\t&& CustomerInput@CustomerName == OrdersInput@CustomerName\n\t&& CustomerInput@OrderDate == OrdersInput@OrderDate,\n\tjoinType:'right',\n\tbroadcast: 'none')~> CustomerOrderInnerJoin"
 						},
 						{
 							"name": "SortByCountry",
