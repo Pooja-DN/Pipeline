@@ -33,12 +33,12 @@
 			],
 			"transformations": [
 				{
-					"name": "CustomerOrderLeftJoin",
-					"script": "CustomerInput, OrdersInput join(CustomerInput@CustomerName == OrdersInput@CustomerName,\n\tjoinType:'left',\n\tbroadcast: 'none')~> CustomerOrderLeftJoin"
+					"name": "CustomerOrderRightJoin",
+					"script": "CustomerInput, OrdersInput join(CustomerInput@Country == OrdersInput@Country\n\t&& CustomerInput@CustomerName == OrdersInput@CustomerName\n\t&& CustomerInput@OrderDate == OrdersInput@OrderDate,\n\tjoinType:'right',\n\tbroadcast: 'none')~> CustomerOrderRightJoin"
 				},
 				{
 					"name": "SortByName",
-					"script": "CustomerOrderLeftJoin sort(asc(CustomerInput@CustomerName, true)) ~> SortByName"
+					"script": "CustomerOrderRightJoin sort(asc(CustomerInput@CustomerName, true)) ~> SortByName"
 				},
 				{
 					"name": "FilterByCountry",
