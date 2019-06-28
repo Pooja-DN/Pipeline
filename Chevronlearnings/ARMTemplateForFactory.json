@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"AzureDataLakeSink_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeSink'"
+		},
 		"AzureDataLakeStorage1_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
@@ -18,6 +22,10 @@
 		"AzureSqlDatabase1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
+		"AzureDataLakeSink_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storageforgen2.dfs.core.windows.net"
 		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
@@ -504,6 +512,32 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CustomerOrdersOutput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeSink",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "prepfiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeSink')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CustomerStagging')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -711,6 +745,23 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeSink')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeSink_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeSink_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -754,8 +805,7 @@
 								"type": "DatasetReference"
 							},
 							"name": "CustomerInput",
-							"typeProperties": {},
-							"script": "source(output(\n\t\tCustomerID as string,\n\t\tCustomerName as string,\n\t\tContactNum as string,\n\t\tCountry as string,\n\t\tOrderDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> CustomerInput"
+							"typeProperties": {}
 						},
 						{
 							"dataset": {
@@ -763,44 +813,25 @@
 								"type": "DatasetReference"
 							},
 							"name": "OrdersInput",
-							"typeProperties": {},
-							"script": "source(output(\n\t\tOrderID as string,\n\t\tCustomerName as string,\n\t\tCountry as string,\n\t\tOrderDate as string,\n\t\tProduct as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> OrdersInput"
+							"typeProperties": {}
 						}
 					],
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CustomerOrderOutput1",
+								"referenceName": "CustomerOrdersOutput",
 								"type": "DatasetReference"
 							},
-							"name": "CustomerOrderOutputSink",
-							"script": "AlterByProduct sink(input(\n\t\tCustomerID as string,\n\t\tContactNum as string,\n\t\tOrderID as string,\n\t\tCustomerName as string,\n\t\tCountry as string,\n\t\tOrderDate as string,\n\t\tProduct as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tCustomerID,\n\t\tContactNum,\n\t\tOrderID,\n\t\tProduct\n\t)) ~> CustomerOrderOutputSink"
+							"name": "CustomerOrderOutputSink"
 						}
 					],
-					"transformations": [
-						{
-							"name": "CustomerOrderInnerJoin",
-							"script": "CustomerInput, OrdersInput join(CustomerInput@CustomerName == OrdersInput@CustomerName,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> CustomerOrderInnerJoin"
-						},
-						{
-							"name": "SortByCountry",
-							"script": "CustomerOrderInnerJoin sort(desc(CustomerInput@Country, true)) ~> SortByCountry"
-						},
-						{
-							"name": "FilterByCountry",
-							"script": "SortByCountry filter(CustomerInput@Country != 'America') ~> FilterByCountry"
-						},
-						{
-							"name": "AlterByProduct",
-							"script": "FilterByCountry alterRow(updateIf(isUpdate(1))) ~> AlterByProduct"
-						}
-					]
+					"script": "\n\nsource(output(\n\t\tCustomerID as string,\n\t\tCustomerName as string,\n\t\tContactNum as string,\n\t\tCountry as string,\n\t\tOrderDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> CustomerInput\nsource(output(\n\t\tOrderID as string,\n\t\tCustomerName as string,\n\t\tCountry as string,\n\t\tOrderDate as string,\n\t\tProduct as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> OrdersInput\nCustomerInput, OrdersInput join(CustomerInput@CustomerName == OrdersInput@CustomerName,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> CustomerOrderInnerJoin\nCustomerOrderInnerJoin sort(desc(CustomerInput@Country, true)) ~> SortByCountry\nSortByCountry filter(CustomerInput@Country != 'America') ~> FilterByCountry\nFilterByCountry sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tCustomerID,\n\t\tContactNum,\n\t\tOrderID,\n\t\tCustomerName = OrdersInput@CustomerName,\n\t\tCountry = OrdersInput@Country,\n\t\tOrderDate = OrdersInput@OrderDate,\n\t\tProduct\n\t)) ~> CustomerOrderOutputSink"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/CustomerInput')]",
 				"[concat(variables('factoryId'), '/datasets/OrderInput')]",
-				"[concat(variables('factoryId'), '/datasets/CustomerOrderOutput1')]"
+				"[concat(variables('factoryId'), '/datasets/CustomerOrdersOutput')]"
 			]
 		}
 	]

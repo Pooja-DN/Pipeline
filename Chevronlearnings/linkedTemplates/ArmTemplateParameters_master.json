@@ -8,11 +8,17 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"AzureDataLakeSink_accountKey": {
+			"value": ""
+		},
 		"AzureDataLakeStorage1_accountKey": {
 			"value": ""
 		},
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
+		},
+		"AzureDataLakeSink_properties_typeProperties_url": {
+			"value": "https://storageforgen2.dfs.core.windows.net"
 		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://chevrondatalakegen2.dfs.core.windows.net"
