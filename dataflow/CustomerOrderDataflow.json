@@ -9,16 +9,14 @@
 						"referenceName": "CustomerInput",
 						"type": "DatasetReference"
 					},
-					"name": "CustomerInput",
-					"script": "source(output(\n\t\tCustomerID as string,\n\t\tCustomerName as string,\n\t\tContactNum as string,\n\t\tCountry as string,\n\t\tOrderDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> CustomerInput"
+					"name": "CustomerInput"
 				},
 				{
 					"dataset": {
 						"referenceName": "OrderInput",
 						"type": "DatasetReference"
 					},
-					"name": "OrdersInput",
-					"script": "source(output(\n\t\tOrderID as string,\n\t\tCustomerName as string,\n\t\tCountry as string,\n\t\tOrderDate as string,\n\t\tProduct as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> OrdersInput"
+					"name": "OrdersInput"
 				}
 			],
 			"sinks": [
@@ -27,28 +25,10 @@
 						"referenceName": "CustomerOrderOutput1",
 						"type": "DatasetReference"
 					},
-					"name": "CustomerOrderOutputSink",
-					"script": "AlterByProduct sink(input(\n\t\tCustomerID as string,\n\t\tContactNum as string,\n\t\tOrderID as string,\n\t\tCustomerName as string,\n\t\tCountry as string,\n\t\tOrderDate as string,\n\t\tProduct as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tCustomerID,\n\t\tContactNum,\n\t\tOrderID,\n\t\tProduct\n\t)) ~> CustomerOrderOutputSink"
+					"name": "CustomerOrderOutputSink"
 				}
 			],
-			"transformations": [
-				{
-					"name": "CustomerOrderInnerJoin",
-					"script": "CustomerInput, OrdersInput join(CustomerInput@CustomerName == OrdersInput@CustomerName,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> CustomerOrderInnerJoin"
-				},
-				{
-					"name": "SortByCountry",
-					"script": "CustomerOrderInnerJoin sort(desc(CustomerInput@Country, true)) ~> SortByCountry"
-				},
-				{
-					"name": "FilterByCountry",
-					"script": "SortByCountry filter(CustomerInput@Country != 'America') ~> FilterByCountry"
-				},
-				{
-					"name": "AlterByProduct",
-					"script": "FilterByCountry alterRow(updateIf(isUpdate(1))) ~> AlterByProduct"
-				}
-			]
+			"script": "\n\nsource(output(\n\t\tCustomerID as string,\n\t\tCustomerName as string,\n\t\tContactNum as string,\n\t\tCountry as string,\n\t\tOrderDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> CustomerInput\nsource(output(\n\t\tOrderID as string,\n\t\tCustomerName as string,\n\t\tCountry as string,\n\t\tOrderDate as string,\n\t\tProduct as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> OrdersInput\nCustomerInput, OrdersInput join(CustomerInput@CustomerName == OrdersInput@CustomerName,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> CustomerOrderInnerJoin\nCustomerOrderInnerJoin sort(desc(CustomerInput@Country, true)) ~> SortByCountry\nSortByCountry filter(CustomerInput@Country != 'America') ~> FilterByCountry\nFilterByCountry alterRow(updateIf(isUpdate(1))) ~> AlterByProduct\nAlterByProduct sink(input(\n\t\tCustomerID as string,\n\t\tContactNum as string,\n\t\tOrderID as string,\n\t\tCustomerName as string,\n\t\tCountry as string,\n\t\tOrderDate as string,\n\t\tProduct as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tCustomerID,\n\t\tContactNum,\n\t\tOrderID,\n\t\tProduct\n\t)) ~> CustomerOrderOutputSink"
 		}
 	}
 }

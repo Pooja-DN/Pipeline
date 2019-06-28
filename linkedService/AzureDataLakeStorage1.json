@@ -2,6 +2,7 @@
 	"name": "AzureDataLakeStorage1",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
+		"annotations": [],
 		"type": "AzureBlobFS",
 		"typeProperties": {
 			"url": "https://chevrondatalakegen2.dfs.core.windows.net",
