@@ -1,0 +1,45 @@
+{
+	"name": "OrdersDataInput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AmazonS3Input",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AmazonS3Location",
+				"bucketName": "awsinputdata00",
+				"folderPath": "awspipelinedata",
+				"fileName": "OrdersData.csv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "OrderID",
+				"type": "String"
+			},
+			{
+				"name": "CustomerName",
+				"type": "String"
+			},
+			{
+				"name": "Country",
+				"type": "String"
+			},
+			{
+				"name": "OrderDate",
+				"type": "String"
+			},
+			{
+				"name": "Product",
+				"type": "String"
+			}
+		]
+	}
+}

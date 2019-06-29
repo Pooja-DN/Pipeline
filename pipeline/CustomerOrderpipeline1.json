@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "CustomerOrderpipeline1",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Data1",
+				"name": "CustomerINPUTData",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -15,11 +15,44 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AmazonS3ReadSetting",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSetting"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSetting"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSetting",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
 					"enableStaging": false
-				}
+				},
+				"inputs": [
+					{
+						"referenceName": "CustomersInput",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CustomerStage",
+						"type": "DatasetReference"
+					}
+				]
 			},
 			{
-				"name": "Copy Data2",
+				"name": "OrdersINPUTData",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -31,8 +64,41 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AmazonS3ReadSetting",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSetting"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSetting"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSetting",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
 					"enableStaging": false
-				}
+				},
+				"inputs": [
+					{
+						"referenceName": "OrdersDataInput",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "OrdersStage",
+						"type": "DatasetReference"
+					}
+				]
 			},
 			{
 				"name": "CustomerOrdersData",
