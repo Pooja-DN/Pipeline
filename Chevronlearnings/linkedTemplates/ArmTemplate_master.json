@@ -7,6 +7,10 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "Chevronlearnings"
 		},
+		"AmazonS3Input_secretAccessKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'secretAccessKey' of 'AmazonS3Input'"
+		},
 		"AzureBlobStorage1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
@@ -22,6 +26,10 @@
 		"AzureSqlDatabase1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
+		"AmazonS3Input_properties_typeProperties_accessKeyId": {
+			"type": "string",
+			"defaultValue": "AKIAJILJPEJI4R7OKVCA"
 		},
 		"AzureDataLakeSink_properties_typeProperties_url": {
 			"type": "string",
@@ -58,6 +66,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AmazonS3Input_secretAccessKey": {
+						"value": "[parameters('AmazonS3Input_secretAccessKey')]"
+					},
 					"AzureBlobStorage1_connectionString": {
 						"value": "[parameters('AzureBlobStorage1_connectionString')]"
 					},
@@ -70,6 +81,9 @@
 					"AzureSqlDatabase1_connectionString": {
 						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
 					},
+					"AmazonS3Input_properties_typeProperties_accessKeyId": {
+						"value": "[parameters('AmazonS3Input_properties_typeProperties_accessKeyId')]"
+					},
 					"AzureDataLakeSink_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeSink_properties_typeProperties_url')]"
 					},
@@ -79,6 +93,26 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
+			]
 		}
 	]
 }

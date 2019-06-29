@@ -7,6 +7,10 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "Chevronlearnings"
 		},
+		"AmazonS3Input_secretAccessKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'secretAccessKey' of 'AmazonS3Input'"
+		},
 		"AzureBlobStorage1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
@@ -23,6 +27,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
 		},
+		"AmazonS3Input_properties_typeProperties_accessKeyId": {
+			"type": "string",
+			"defaultValue": "AKIAJILJPEJI4R7OKVCA"
+		},
 		"AzureDataLakeSink_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://storageforgen2.dfs.core.windows.net"
@@ -36,6 +44,24 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AmazonS3Input')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AmazonS3",
+				"typeProperties": {
+					"serviceUrl": "",
+					"accessKeyId": "[parameters('AmazonS3Input_properties_typeProperties_accessKeyId')]",
+					"secretAccessKey": {
+						"type": "SecureString",
+						"value": "[parameters('AmazonS3Input_secretAccessKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -330,6 +356,82 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CustomerSourceInput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeSink",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "CustomerData.csv",
+						"fileSystem": "awsinputfiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "CustomerID",
+						"type": "String"
+					},
+					{
+						"name": "CustomerName",
+						"type": "String"
+					},
+					{
+						"name": "ContactNum",
+						"type": "String"
+					},
+					{
+						"name": "Country",
+						"type": "String"
+					},
+					{
+						"name": "OrderDate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeSink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CustomerStage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeSink",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "awsstagefiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeSink')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CustomerStagging')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -375,6 +477,56 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CustomersInput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AmazonS3Input",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AmazonS3Location",
+						"bucketName": "awsinputdata00",
+						"folderPath": "awspipelinedata",
+						"fileName": "CustomerData.csv"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "CustomerID",
+						"type": "String"
+					},
+					{
+						"name": "CustomerName",
+						"type": "String"
+					},
+					{
+						"name": "ContactNum",
+						"type": "String"
+					},
+					{
+						"name": "Country",
+						"type": "String"
+					},
+					{
+						"name": "OrderDate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AmazonS3Input')]"
 			]
 		},
 		{
@@ -524,314 +676,102 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CustomerOrderDataflow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
+			"name": "[concat(parameters('factoryName'), '/OrdersDataInput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"type": "MappingDataFlow",
+				"linkedServiceName": {
+					"referenceName": "AmazonS3Input",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
 				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "CustomerInput",
-								"type": "DatasetReference"
-							},
-							"name": "CustomerInput",
-							"typeProperties": {}
-						},
-						{
-							"dataset": {
-								"referenceName": "OrderInput",
-								"type": "DatasetReference"
-							},
-							"name": "OrdersInput",
-							"typeProperties": {}
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "CustomerOrdersOutput",
-								"type": "DatasetReference"
-							},
-							"name": "CustomerOrderOutputSink"
-						}
-					],
-					"script": "\n\nsource(output(\n\t\tCustomerID as string,\n\t\tCustomerName as string,\n\t\tContactNum as string,\n\t\tCountry as string,\n\t\tOrderDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> CustomerInput\nsource(output(\n\t\tOrderID as string,\n\t\tCustomerName as string,\n\t\tCountry as string,\n\t\tOrderDate as string,\n\t\tProduct as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> OrdersInput\nCustomerInput, OrdersInput join(CustomerInput@CustomerName == OrdersInput@CustomerName,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> CustomerOrderInnerJoin\nCustomerOrderInnerJoin sort(desc(CustomerInput@Country, true)) ~> SortByCountry\nSortByCountry filter(CustomerInput@Country != 'America') ~> FilterByCountry\nFilterByCountry sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tCustomerID,\n\t\tContactNum,\n\t\tOrderID,\n\t\tCustomerName = OrdersInput@CustomerName,\n\t\tCountry = OrdersInput@Country,\n\t\tOrderDate = OrdersInput@OrderDate,\n\t\tProduct\n\t)) ~> CustomerOrderOutputSink"
-				}
+					"location": {
+						"type": "AmazonS3Location",
+						"bucketName": "awsinputdata00",
+						"folderPath": "awspipelinedata",
+						"fileName": "OrdersData.csv"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "OrderID",
+						"type": "String"
+					},
+					{
+						"name": "CustomerName",
+						"type": "String"
+					},
+					{
+						"name": "Country",
+						"type": "String"
+					},
+					{
+						"name": "OrderDate",
+						"type": "String"
+					},
+					{
+						"name": "Product",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/CustomerInput')]",
-				"[concat(variables('factoryId'), '/datasets/OrderInput')]",
-				"[concat(variables('factoryId'), '/datasets/CustomerOrdersOutput')]"
+				"[concat(variables('factoryId'), '/linkedServices/AmazonS3Input')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CustomerOrderPipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/OrdersSourceInput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeSink",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "OrdersData.csv",
+						"fileSystem": "awsinputfiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
 					{
-						"name": "Customerdetails",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSetting",
-									"recursive": true
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSetting"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSetting"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSetting",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "CustomerID",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CustomerID",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CustomerName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CustomerName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ContactNum",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ContactNum",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Country",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Country",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "OrderDate",
-											"type": "String"
-										},
-										"sink": {
-											"name": "OrderDate",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "CustomerDetails",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "CustomerStagging",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+						"name": "OrderID",
+						"type": "String"
 					},
 					{
-						"name": "OrderDetails",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSetting",
-									"recursive": true
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSetting"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSetting"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSetting",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "OrderID",
-											"type": "String"
-										},
-										"sink": {
-											"name": "OrderID",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CustomerName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CustomerName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Country",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Country",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "OrderDate",
-											"type": "String"
-										},
-										"sink": {
-											"name": "OrderDate",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Product",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Product",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "OrderDetails",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "OrderStagging",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+						"name": "CustomerName",
+						"type": "String"
 					},
 					{
-						"name": "CustomerOrderPipeline",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "Customerdetails",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "OrderDetails",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "CustomerOrderDataflow",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"CustomerInput": {},
-									"OrdersInput": {},
-									"CustomerOrderOutputSink": {}
-								}
-							},
-							"staging": {}
-						}
+						"name": "Country",
+						"type": "String"
+					},
+					{
+						"name": "OrderDate",
+						"type": "String"
+					},
+					{
+						"name": "Product",
+						"type": "String"
 					}
-				],
-				"annotations": []
+				]
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/CustomerDetails')]",
-				"[concat(variables('factoryId'), '/datasets/CustomerStagging')]",
-				"[concat(variables('factoryId'), '/datasets/OrderDetails')]",
-				"[concat(variables('factoryId'), '/datasets/OrderStagging')]",
-				"[concat(variables('factoryId'), '/dataflows/CustomerOrderDataflow')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeSink')]"
 			]
 		}
 	]

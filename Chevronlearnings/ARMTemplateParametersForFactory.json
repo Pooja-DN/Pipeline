@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "Chevronlearnings"
 		},
+		"AmazonS3Input_secretAccessKey": {
+			"value": ""
+		},
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
@@ -16,6 +19,9 @@
 		},
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
+		},
+		"AmazonS3Input_properties_typeProperties_accessKeyId": {
+			"value": "AKIAJILJPEJI4R7OKVCA"
 		},
 		"AzureDataLakeSink_properties_typeProperties_url": {
 			"value": "https://storageforgen2.dfs.core.windows.net"
