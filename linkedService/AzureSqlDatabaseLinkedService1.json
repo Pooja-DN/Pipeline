@@ -1,0 +1,12 @@
+{
+	"name": "AzureSqlDatabaseLinkedService1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=chevronserver00.database.windows.net;initial catalog=ChevronDatabase;user id=chserver",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkNIRVZST05MRUFSTklOR1NfZGExM2U5NTItYzkyMi00MTMwLTkzMGEtMzZlYTY2ZTY5ODliIg0KfQ=="
+		}
+	}
+}
