@@ -1,0 +1,16 @@
+{
+	"name": "SqlServerInput",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=chevronserver00.database.windows.net;initial catalog=ChevronDatabase;user id=chserver",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI3YzA4YjdmYi0yZDI3LTQxMGQtYTZjYy0wMWZkYmY4ZmM3MjIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SelfHostedIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
