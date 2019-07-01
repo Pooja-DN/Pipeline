@@ -11,6 +11,9 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"AzureBlobStorage2_connectionString": {
+			"value": ""
+		},
 		"AzureDataLakeSink_accountKey": {
 			"value": ""
 		},
@@ -23,7 +26,22 @@
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
+		"AzureSqlDatabase2_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabaseLink_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabaseLinkService_connectionString": {
+			"value": ""
+		},
 		"AzureSqlDatabaseLinkedService_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabaseLinkedService1_connectionString": {
+			"value": ""
+		},
+		"AzureStorageLinkService_connectionString": {
 			"value": ""
 		},
 		"AzureStorageLinkedService_connectionString": {
@@ -32,10 +50,7 @@
 		"SqlServerInput_connectionString": {
 			"value": ""
 		},
-		"AzureSqlDatabaseLinkedService1_connectionString": {
-			"value": ""
-		},
-		"AzureBlobStorage2_connectionString": {
+		"SqlServerLinkedService_connectionString": {
 			"value": ""
 		},
 		"AmazonS3Input_properties_typeProperties_accessKeyId": {
