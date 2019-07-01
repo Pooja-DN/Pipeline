@@ -20,6 +20,9 @@
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
+		"SqlServerInput_connectionString": {
+			"value": ""
+		},
 		"AmazonS3Input_properties_typeProperties_accessKeyId": {
 			"value": "AKIAJILJPEJI4R7OKVCA"
 		},
