@@ -32,6 +32,12 @@
 		"SqlServerInput_connectionString": {
 			"value": ""
 		},
+		"AzureSqlDatabaseLinkedService1_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage2_connectionString": {
+			"value": ""
+		},
 		"AmazonS3Input_properties_typeProperties_accessKeyId": {
 			"value": "AKIAJILJPEJI4R7OKVCA"
 		},

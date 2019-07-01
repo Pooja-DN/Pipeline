@@ -43,6 +43,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServerInput'"
 		},
+		"AzureSqlDatabaseLinkedService1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseLinkedService1'"
+		},
+		"AzureBlobStorage2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
+		},
 		"AmazonS3Input_properties_typeProperties_accessKeyId": {
 			"type": "string",
 			"defaultValue": "AKIAJILJPEJI4R7OKVCA"
@@ -106,6 +114,12 @@
 					"AzureStorageLinkedService_connectionString": {
 						"value": "[parameters('AzureStorageLinkedService_connectionString')]"
 					},
+					"AzureSqlDatabaseLinkedService1_connectionString": {
+						"value": "[parameters('AzureSqlDatabaseLinkedService1_connectionString')]"
+					},
+					"AzureBlobStorage2_connectionString": {
+						"value": "[parameters('AzureBlobStorage2_connectionString')]"
+					},
 					"AmazonS3Input_properties_typeProperties_accessKeyId": {
 						"value": "[parameters('AmazonS3Input_properties_typeProperties_accessKeyId')]"
 					},
@@ -140,6 +154,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_1')]"
 			]
 		}
 	]
