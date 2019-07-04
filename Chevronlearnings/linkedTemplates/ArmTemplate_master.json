@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
 		},
+		"AzureBlobTask5_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobTask5'"
+		},
 		"AzureDataLakeSink_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeSink'"
@@ -67,6 +71,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureStorageLinkedService'"
 		},
+		"SqlDatabaseTask5_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlDatabaseTask5'"
+		},
 		"SqlServerInput_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServerInput'"
@@ -82,14 +90,6 @@
 		"SqlServerOnPremises_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SqlServerOnPremises'"
-		},
-		"AzureBlobTask5_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureBlobTask5'"
-		},
-		"SqlDatabaseTask5_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'SqlDatabaseTask5'"
 		},
 		"AmazonS3Input_properties_typeProperties_accessKeyId": {
 			"type": "string",
@@ -143,6 +143,9 @@
 					"AzureBlobStorage2_connectionString": {
 						"value": "[parameters('AzureBlobStorage2_connectionString')]"
 					},
+					"AzureBlobTask5_connectionString": {
+						"value": "[parameters('AzureBlobTask5_connectionString')]"
+					},
 					"AzureDataLakeSink_accountKey": {
 						"value": "[parameters('AzureDataLakeSink_accountKey')]"
 					},
@@ -178,9 +181,6 @@
 					},
 					"AzureStorageLinkedService_connectionString": {
 						"value": "[parameters('AzureStorageLinkedService_connectionString')]"
-					},
-					"AzureBlobTask5_connectionString": {
-						"value": "[parameters('AzureBlobTask5_connectionString')]"
 					},
 					"SqlDatabaseTask5_connectionString": {
 						"value": "[parameters('SqlDatabaseTask5_connectionString')]"
