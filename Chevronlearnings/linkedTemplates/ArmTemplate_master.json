@@ -67,10 +67,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureStorageLinkedService'"
 		},
-		"SQLServerTask4_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'SQLServerTask4'"
-		},
 		"SqlServerInput_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServerInput'"
@@ -86,6 +82,14 @@
 		"SqlServerOnPremises_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SqlServerOnPremises'"
+		},
+		"AzureBlobTask5_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobTask5'"
+		},
+		"SqlDatabaseTask5_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlDatabaseTask5'"
 		},
 		"AmazonS3Input_properties_typeProperties_accessKeyId": {
 			"type": "string",
@@ -175,6 +179,12 @@
 					"AzureStorageLinkedService_connectionString": {
 						"value": "[parameters('AzureStorageLinkedService_connectionString')]"
 					},
+					"AzureBlobTask5_connectionString": {
+						"value": "[parameters('AzureBlobTask5_connectionString')]"
+					},
+					"SqlDatabaseTask5_connectionString": {
+						"value": "[parameters('SqlDatabaseTask5_connectionString')]"
+					},
 					"AmazonS3Input_properties_typeProperties_accessKeyId": {
 						"value": "[parameters('AmazonS3Input_properties_typeProperties_accessKeyId')]"
 					},
@@ -221,9 +231,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"SQLServerTask4_connectionString": {
-						"value": "[parameters('SQLServerTask4_connectionString')]"
 					},
 					"SqlServerInput_connectionString": {
 						"value": "[parameters('SqlServerInput_connectionString')]"

@@ -50,9 +50,6 @@
 		"AzureStorageLinkedService_connectionString": {
 			"value": ""
 		},
-		"SQLServerTask4_connectionString": {
-			"value": ""
-		},
 		"SqlServerInput_connectionString": {
 			"value": ""
 		},
@@ -63,6 +60,12 @@
 			"value": ""
 		},
 		"SqlServerOnPremises_password": {
+			"value": ""
+		},
+		"AzureBlobTask5_connectionString": {
+			"value": ""
+		},
+		"SqlDatabaseTask5_connectionString": {
 			"value": ""
 		},
 		"AmazonS3Input_properties_typeProperties_accessKeyId": {
