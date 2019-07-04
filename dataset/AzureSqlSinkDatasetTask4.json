@@ -1,0 +1,23 @@
+{
+	"name": "AzureSqlSinkDatasetTask4",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseTask4",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SinkTableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().SinkTableName",
+				"type": "Expression"
+			}
+		}
+	}
+}
