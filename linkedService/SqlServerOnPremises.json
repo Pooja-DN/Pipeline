@@ -1,0 +1,17 @@
+{
+	"name": "SqlServerOnPremises",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=ChevronVirtualM;initial catalog=OnPremisesDatabase",
+			"userName": "PoojaDN",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI3ZTJkY2I4ZS00MmM2LTQ4ODgtOGEzYy1lZjdiNGFjYjg3Y2IiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "MyselfhostedIR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
