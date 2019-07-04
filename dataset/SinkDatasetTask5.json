@@ -1,0 +1,23 @@
+{
+	"name": "SinkDatasetTask5",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobTask5",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "incremental",
+				"container": "adftutorial"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
