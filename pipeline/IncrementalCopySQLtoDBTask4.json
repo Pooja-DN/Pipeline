@@ -1,0 +1,121 @@
+{
+	"name": "IncrementalCopySQLtoDBTask4",
+	"properties": {
+		"activities": [
+			{
+				"name": "IterateSQLTablesTask4",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.tableList",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "LookupWatermark",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "select * from watermarktable where TableName  =  '@{item().TABLE_NAME}' ",
+										"type": "Expression"
+									}
+								},
+								"dataset": {
+									"referenceName": "WaterMarkDatasetTask4",
+									"type": "DatasetReference"
+								}
+							}
+						},
+						{
+							"name": "LookupSource",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "select MAX(@{item().WaterMark_Column}) as NewWatermarkvalue from @{item().TABLE_NAME}",
+										"type": "Expression"
+									}
+								},
+								"dataset": {
+									"referenceName": "SqlServerDatasetTask4",
+									"type": "DatasetReference"
+								}
+							}
+						},
+						{
+							"name": "IncrementallyCopySQltoDB",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "LookupWatermark",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "LookupSource",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "select * from @{item().TABLE_NAME} where @{item().WaterMark_Column} > '@{activity('LookupWatermark').output.firstRow.WatermarkValue}' and @{item().WaterMark_Column} <= '@{activity('LookupSource').output.firstRow.NewWatermarkvalue}'",
+										"type": "Expression"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "SqlServerDatasetTask4",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"tableList": {
+				"type": "object"
+			}
+		},
+		"annotations": []
+	}
+}
