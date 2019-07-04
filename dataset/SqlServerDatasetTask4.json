@@ -1,0 +1,12 @@
+{
+	"name": "SqlServerDatasetTask4",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServerOnPremises",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
