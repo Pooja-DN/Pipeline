@@ -41,16 +41,28 @@
 		"AzureSqlDatabaseLinkedService1_connectionString": {
 			"value": ""
 		},
+		"AzureSqlDatabaseTask4_connectionString": {
+			"value": ""
+		},
 		"AzureStorageLinkService_connectionString": {
 			"value": ""
 		},
 		"AzureStorageLinkedService_connectionString": {
 			"value": ""
 		},
+		"SQLServerTask4_connectionString": {
+			"value": ""
+		},
 		"SqlServerInput_connectionString": {
 			"value": ""
 		},
 		"SqlServerLinkedService_connectionString": {
+			"value": ""
+		},
+		"SqlServerOnPremises_connectionString": {
+			"value": ""
+		},
+		"SqlServerOnPremises_password": {
 			"value": ""
 		},
 		"AmazonS3Input_properties_typeProperties_accessKeyId": {
@@ -61,6 +73,9 @@
 		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://chevrondatalakegen2.dfs.core.windows.net"
+		},
+		"SqlServerOnPremises_properties_typeProperties_userName": {
+			"value": "PoojaDN"
 		}
 	}
 }

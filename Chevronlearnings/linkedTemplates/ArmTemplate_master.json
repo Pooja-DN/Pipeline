@@ -55,6 +55,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseLinkedService1'"
 		},
+		"AzureSqlDatabaseTask4_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseTask4'"
+		},
 		"AzureStorageLinkService_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureStorageLinkService'"
@@ -63,6 +67,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureStorageLinkedService'"
 		},
+		"SQLServerTask4_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SQLServerTask4'"
+		},
 		"SqlServerInput_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServerInput'"
@@ -70,6 +78,14 @@
 		"SqlServerLinkedService_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServerLinkedService'"
+		},
+		"SqlServerOnPremises_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServerOnPremises'"
+		},
+		"SqlServerOnPremises_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SqlServerOnPremises'"
 		},
 		"AmazonS3Input_properties_typeProperties_accessKeyId": {
 			"type": "string",
@@ -82,6 +98,10 @@
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://chevrondatalakegen2.dfs.core.windows.net"
+		},
+		"SqlServerOnPremises_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "PoojaDN"
 		},
 		"containerUri": {
 			"type": "string",
@@ -146,6 +166,9 @@
 					"AzureSqlDatabaseLinkedService1_connectionString": {
 						"value": "[parameters('AzureSqlDatabaseLinkedService1_connectionString')]"
 					},
+					"AzureSqlDatabaseTask4_connectionString": {
+						"value": "[parameters('AzureSqlDatabaseTask4_connectionString')]"
+					},
 					"AzureStorageLinkService_connectionString": {
 						"value": "[parameters('AzureStorageLinkService_connectionString')]"
 					},
@@ -199,16 +222,48 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"SQLServerTask4_connectionString": {
+						"value": "[parameters('SQLServerTask4_connectionString')]"
+					},
 					"SqlServerInput_connectionString": {
 						"value": "[parameters('SqlServerInput_connectionString')]"
 					},
 					"SqlServerLinkedService_connectionString": {
 						"value": "[parameters('SqlServerLinkedService_connectionString')]"
+					},
+					"SqlServerOnPremises_connectionString": {
+						"value": "[parameters('SqlServerOnPremises_connectionString')]"
+					},
+					"SqlServerOnPremises_password": {
+						"value": "[parameters('SqlServerOnPremises_password')]"
+					},
+					"SqlServerOnPremises_properties_typeProperties_userName": {
+						"value": "[parameters('SqlServerOnPremises_properties_typeProperties_userName')]"
 					}
 				}
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_2')]"
 			]
 		}
 	]
